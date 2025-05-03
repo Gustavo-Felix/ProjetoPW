@@ -1,0 +1,79 @@
+﻿@model IEnumerable<ProjetoPW.Models.Checklist>
+
+@{
+    ViewBag.Title = "Listar";
+}
+
+<h2>Listar Carros</h2>
+
+<p>
+    @Html.ActionLink("Novo Carro", "Create", null, new { @class = "btn btn-primary" })
+    @Html.ActionLink("Baixar PDF", "GerarPdf", null, new { @class = "btn btn-danger" })
+    @Html.ActionLink("Baixar Excel", "DownloadExcel", null, new { @class = "btn btn-success" })
+</p>
+
+<table id="tabelaCarros" class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Nome da Tarefa</th>
+            <th>Descrição</th>
+            <th>Concluido</th>
+            <th>Data de Cadastro</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var checklist in Model)
+        {
+            <tr>
+                <td>@checklist.nomeTarefa</td>
+                <td>@checklist.descricao</td>
+                <td>@(checklist.concluido ? "Sim" : "Não")</td>
+                <td>@checklist.dataCadastro.ToShortDateString()</td>
+                <td>
+                    @Html.ActionLink("Editar", "Edit", new { id = checklist.id }, new { @class = "btn btn-warning btn-sm" })
+                    <button class="btn btn-danger btn-sm" onclick="excluirCarro(@checklist.id)">Excluir</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+    <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap4.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap4.min.css" />
+
+    <script>
+        $(document).ready(function () {
+            $('#tabelaCarros').DataTable({
+                language: {
+                    search: "Procurar:",
+                    lengthMenu: "Mostrar _MENU_ registros por página",
+                    zeroRecords: "Nenhum registro encontrado",
+                    info: "Mostrando página _PAGE_ de _PAGES_",
+                    infoEmpty: "Nenhum registro disponível",
+                    infoFiltered: "(filtrado de _MAX_ registros no total)",
+                    paginate: {
+                        first: "Primeiro",
+                        last: "Último",
+                        next: "Próximo",
+                        previous: "Anterior"
+                    }
+                }
+            });
+        });
+
+        function excluirCarro(id) {
+            if (confirm('Deseja realmente excluir este carro?')) {
+                $.post('@Url.Action("DeleteAjax")', { id: id }, function (data) {
+                    if (data.sucesso) {
+                        location.reload();
+                    } else {
+                        alert("Erro ao excluir carro.");
+                    }
+                });
+            }
+        }
+    </script>
+}
