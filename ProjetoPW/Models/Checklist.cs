@@ -8,16 +8,23 @@ namespace ProjetoPW.Models
 {
     public class Checklist
     {
-        public int id { get; set; }
-        public string nomeTarefa { get; set; }
+        public int id { get; set; } //id 
+        public string nome { get; set; } //nome tarefa
         [Required(ErrorMessage = "É necessário dar um nome a tarefa!")]
-        public string descricao { get; set; }
+        public string descricao { get; set; } //descricao da tarefa/meta
         [Required(ErrorMessage = "É necessário colocar uma descrição!")]
-        public bool concluido { get; set; }
-        [Required(ErrorMessage = "A data de nascimento é obrigatória.")]
+        
         [DataType(DataType.Date)]
-        [Display(Name = "Data de Nascimento")]
-        public DateTime dataCadastro { get; set; }
+        [Display(Name = "Data de cadastro")]
+        public DateTime dataCadastro { get; set; } //data de cadastro
+
+        [Required(ErrorMessage = "A data do prazo é obrigatória!")]
+        [DataType(DataType.Date)]
+        [Display(Name = "Data de Prazo")]
+        public DateTime prazo { get; set; } //prazo
+        public bool concluido { get; set; } //se concluido ou nao
+        public string categoria { get; set; } // Prazo vencido, em andamento ou concluido.
+
 
         public static void GerarLista(HttpSessionStateBase session)
         {
@@ -27,9 +34,23 @@ namespace ProjetoPW.Models
             }
             var lista = new List<Checklist>
             {
-                new Checklist { id = 0, nomeTarefa = "Teste", descricao = "Esta é uma tarefa exemplo!", concluido = false, dataCadastro = new DateTime(2025, 01, 01) },
+                new Checklist { id = 0, nome = "Teste", descricao = "Esta é uma tarefa exemplo!", dataCadastro = new DateTime(2025, 01, 01), prazo = new DateTime(2025, 12, 31), categoria = "Em andamento",  concluido = false },
             };
             session["ListaChecklist"] = lista;
+        }
+        public static double Porcentagem(HttpSessionStateBase session)
+        {
+            var lista = session["ListaChecklist"] as List<Checklist>;
+
+            if (lista == null || lista.Count == 0)
+                return 0;
+
+            int total = lista.Count;
+            int concluidas = lista.Count(t => t.concluido);
+
+            double porcentagem = (double)concluidas / total * 100;
+            return porcentagem;
+
         }
         public void Adicionar(HttpSessionStateBase session)
         {
@@ -41,9 +62,26 @@ namespace ProjetoPW.Models
             }
 
             this.id = lista.Count > 0 ? lista.Max(a => a.id) + 1 : 0;
+            this.categoria = Categoria(this.prazo, this.concluido);
+            this.dataCadastro = DateTime.Now;
             lista.Add(this);
         }
-
+        public string Categoria(DateTime prazo, bool concluido)
+        {
+            switch (concluido)
+            {
+                case true when DateTime.Now <= prazo:
+                    return "Concluída";
+                case false when DateTime.Now <= prazo:
+                    return "Em Andamento";
+                case true when DateTime.Now > prazo:
+                    return "Concluída com Atraso";
+                case false when DateTime.Now > prazo:
+                    return "Atrasada";
+                default:
+                    return "Sem Categoria";
+            }
+        }
         public static Checklist Procurar(HttpSessionStateBase session, int id)
         {
             var lista = session["ListaChecklist"] as List<Checklist>;
@@ -57,10 +95,13 @@ namespace ProjetoPW.Models
 
             if (original != null)
             {
-                original.nomeTarefa = this.nomeTarefa;
+                original.nome = this.nome;
                 original.descricao = this.descricao;
                 original.concluido = this.concluido;
                 original.dataCadastro = this.dataCadastro;
+                original.prazo = this.prazo;
+                original.concluido = this.concluido;
+                original.categoria = Categoria(this.prazo, this.concluido);
             }
         }
 

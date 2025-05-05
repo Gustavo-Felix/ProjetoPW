@@ -16,6 +16,7 @@ namespace ProjetoPW.Controllers
         public ActionResult Listar()
         {
             Checklist.GerarLista(Session);
+            double porcentagem = Checklist.Porcentagem(Session);
             return View(Session["ListaChecklist"] as List<Checklist>);
         }
 
