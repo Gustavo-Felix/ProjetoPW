@@ -15,9 +15,13 @@ namespace ProjetoPW.Controllers
         // Listar todos os Checklists
         public ActionResult Listar()
         {
-            Checklist.GerarLista(Session);
+            Checklist.GerarLista(Session); // Garante que a lista esteja carregada
+            var lista = Session["ListaChecklist"] as List<Checklist>;
+
             double porcentagem = Checklist.Porcentagem(Session);
-            return View(Session["ListaChecklist"] as List<Checklist>);
+            ViewBag.Porcentagem = porcentagem;
+
+            return View(lista);
         }
 
         // Criar um novo Checklist

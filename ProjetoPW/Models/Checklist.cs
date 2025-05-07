@@ -9,10 +9,12 @@ namespace ProjetoPW.Models
     public class Checklist
     {
         public int id { get; set; } //id 
-        public string nome { get; set; } //nome tarefa
+
         [Required(ErrorMessage = "É necessário dar um nome a tarefa!")]
-        public string descricao { get; set; } //descricao da tarefa/meta
+        public string nome { get; set; } //nome tarefa
         [Required(ErrorMessage = "É necessário colocar uma descrição!")]
+        public string descricao { get; set; } //descricao da tarefa/meta
+        
         
         [DataType(DataType.Date)]
         [Display(Name = "Data de cadastro")]

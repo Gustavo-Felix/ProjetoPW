@@ -48,7 +48,7 @@
 input, select, textarea {
     background-color: #333;
     color: #f1f1f1;
-    border: 1px solid #f1c40f; /* Borda amarela */
+    border: 1px solid #f1c40f;
     padding: 5px 10px;
     border-radius: 4px;
     box-shadow: none;
@@ -59,7 +59,7 @@ input, select, textarea {
     }
 
     input:focus, select:focus, textarea:focus {
-        border-color: #f1c40f; /* Mantém a borda amarela quando em foco */
+        border-color: #f1c40f;
         outline: none;
     }
 
@@ -90,7 +90,6 @@ input, select, textarea {
     border-radius: 4px !important;
 }
 
-/* Ajuste para .form-control para garantir consistência */
 .form-control, .form-control.text-box {
     background-color: #333 !important;
     color: #f1f1f1 !important;
