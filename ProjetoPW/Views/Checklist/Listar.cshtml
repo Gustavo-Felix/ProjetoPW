@@ -6,9 +6,16 @@
 
 <h2>Checklist e Metas</h2>
 
-<p>
-    @Html.ActionLink("+", "Create", null, new { @class = "btn btn-primary" })
-</p>
+<div class="d-flex justify-content-between align-items-center flex-wrap mb-3">
+    <div>
+        <a href="@Url.Action("Create", "checklist")" class="btn btn-warning mb-2">+</a>
+    </div>
+    <div>
+        <span class="btn btn-warning" style="pointer-events: none;">
+            Metas concluídas: @ViewBag.Porcentagem.ToString("F2") %
+        </span>
+    </div>
+</div>
 
 <table id="tabelaChecklist" class="table table-dark table-bordered table-striped">
     <thead>

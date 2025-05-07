@@ -9,10 +9,12 @@ namespace ProjetoPW.Models
     public class Checklist
     {
         public int id { get; set; } //id 
-        public string nome { get; set; } //nome tarefa
+
         [Required(ErrorMessage = "É necessário dar um nome a tarefa!")]
-        public string descricao { get; set; } //descricao da tarefa/meta
+        public string nome { get; set; } //nome tarefa
         [Required(ErrorMessage = "É necessário colocar uma descrição!")]
+        public string descricao { get; set; } //descricao da tarefa/meta
+        
         
         [DataType(DataType.Date)]
         [Display(Name = "Data de cadastro")]
@@ -35,6 +37,15 @@ namespace ProjetoPW.Models
             var lista = new List<Checklist>
             {
                 new Checklist { id = 0, nome = "Teste", descricao = "Esta é uma tarefa exemplo!", dataCadastro = new DateTime(2025, 01, 01), prazo = new DateTime(2025, 12, 31), categoria = "Em andamento",  concluido = false },
+                new Checklist { id = 1, nome = "Ler livro", descricao = "Terminar leitura do livro favorito", dataCadastro = new DateTime(2025, 02, 15), prazo = new DateTime(2025, 06, 30), categoria = "Em Andamento", concluido = false },
+                new Checklist { id = 2, nome = "Exercícios", descricao = "Fazer treino de academia", dataCadastro = new DateTime(2025, 03, 10), prazo = new DateTime(2025, 12, 31), categoria = "Em Andamento", concluido = false },
+                new Checklist { id = 3, nome = "Compras", descricao = "Comprar itens essenciais do mercado", dataCadastro = new DateTime(2025, 04, 20), prazo = new DateTime(2025, 04, 21), categoria = "Em Andamento", concluido = false },
+                new Checklist { id = 4, nome = "Projeto pessoal", descricao = "Desenvolver aplicação mobile", dataCadastro = new DateTime(2025, 05, 05), prazo = new DateTime(2025, 12, 01), categoria = "Em Andamento", concluido = false },
+                new Checklist { id = 5, nome = "Estudos", descricao = "Aprender um novo idioma", dataCadastro = new DateTime(2025, 06, 01), prazo = new DateTime(2026, 01, 01), categoria = "Em Andamento", concluido = false },
+                new Checklist { id = 6, nome = "Meditação", descricao = "Praticar mindfulness diariamente", dataCadastro = new DateTime(2025, 07, 07), prazo = new DateTime(2025, 12, 31), categoria = "Em Andamento", concluido = false },
+                new Checklist { id = 7, nome = "Curso online", descricao = "Finalizar curso de programação", dataCadastro = new DateTime(2025, 08, 10), prazo = new DateTime(2025, 10, 30), categoria = "Em Andamento", concluido = false },
+                new Checklist { id = 8, nome = "Reunião", descricao = "Preparar apresentação para equipe", dataCadastro = new DateTime(2025, 09, 15), prazo = new DateTime(2025, 09, 20), categoria = "Em Andamento", concluido = false },
+                new Checklist { id = 9, nome = "Viagem", descricao = "Planejar férias de fim de ano", dataCadastro = new DateTime(2025, 10, 01), prazo = new DateTime(2025, 11, 30), categoria = "Em Andamento", concluido = false },
             };
             session["ListaChecklist"] = lista;
         }
