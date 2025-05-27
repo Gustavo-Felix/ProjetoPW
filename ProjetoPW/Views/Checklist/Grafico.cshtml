@@ -1,0 +1,109 @@
+﻿@{
+    ViewBag.Title = "Gráfico de Metas";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>Gráfico de Barras Verticais</title>
+</head>
+<body>
+    <div>
+        <h2>Gráfico de Tarefas</h2>
+
+        <canvas id="myChart" width="800" height="500"></canvas>
+
+        <script>
+    const nomes = @Html.Raw(ViewBag.Nomes);
+    const prazos = @Html.Raw(ViewBag.Prazos);
+    const diasRestantes = @Html.Raw(ViewBag.DiasRestantes);
+    const categorias = @Html.Raw(ViewBag.Categorias);
+
+    // Define cor para cada barra com base na categoria
+    const backgroundColors = categorias.map(categoria => {
+        switch (categoria) {
+            case "Concluída":
+                return 'rgba(75, 192, 75, 0.7)'; // Verde
+            case "Concluída com Atraso":
+                return 'rgba(255, 205, 86, 0.8)'; // Amarelo
+            case "Atrasada":
+                return 'rgba(255, 99, 132, 0.7)'; // Vermelho
+            default:
+                return 'rgba(54, 162, 235, 0.7)'; // Azul padrão
+        }
+    });
+
+    const borderColors = categorias.map(categoria => {
+        switch (categoria) {
+            case "Concluída":
+                return 'rgba(75, 192, 75, 1)';
+            case "Concluída com Atraso":
+                return 'rgba(255, 205, 86, 1)';
+            case "Atrasada":
+                return 'rgba(255, 99, 132, 1)';
+            default:
+                return 'rgba(54, 162, 235, 1)';
+        }
+    });
+
+    const ctx = document.getElementById('myChart').getContext('2d');
+
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: nomes,
+            datasets: [{
+                label: 'Dias Restantes',
+                data: diasRestantes,
+                backgroundColor: backgroundColors,
+                borderColor: borderColors,
+                borderWidth: 1
+            }]
+        },
+        options: {
+            indexAxis: 'x',
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        title: function(context) {
+                            const index = context[0].dataIndex;
+                            return `Tarefa: ${nomes[index]}`;
+                        },
+                        label: function(context) {
+                            const index = context.dataIndex;
+                            return [
+                                `Prazo: ${prazos[index]}`,
+                                `Categoria: ${categorias[index]}`,
+                                `Dias restantes: ${diasRestantes[index]}`
+                            ];
+                        }
+                    }
+                },
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Dias Restantes'
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Nome da Tarefa'
+                    }
+                }
+            }
+        }
+    });
+        </script>
+
+    </div>
+</body>
+</html>

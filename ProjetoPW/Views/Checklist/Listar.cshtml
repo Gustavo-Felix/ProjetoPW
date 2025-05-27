@@ -1,0 +1,88 @@
+﻿@model IEnumerable<ProjetoPW.Models.Checklist>
+
+@{
+    ViewBag.Title = "Listar";
+}
+
+<h2>Checklist e Metas</h2>
+
+<div class="d-flex justify-content-between align-items-center flex-wrap mb-3">
+    <div>
+        <a href="@Url.Action("Create", "checklist")" class="btn btn-warning mb-2">+</a>
+    </div>
+    <div>
+        <span class="btn btn-warning" style="pointer-events: none;">
+            Metas concluídas: @ViewBag.Porcentagem.ToString("F2") %
+        </span>
+    </div>
+</div>
+
+<table id="tabelaChecklist" class="table table-dark table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Nome da Tarefa</th>
+            <th>Descrição</th>
+            <th>Data de Cadastro</th>
+            <th>Prazo</th>
+            <th>Concluido</th>
+            <th>Categoria</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var checklist in Model)
+        {
+            <tr>
+                <td>@checklist.nome</td>
+                <td>@checklist.descricao</td>
+                <td>@checklist.dataCadastro.ToShortDateString()</td>
+                <td>@checklist.prazo.ToShortDateString()</td>
+                <td>@(checklist.concluido ? "Sim" : "Não")</td>
+                <td>@checklist.categoria</td>
+                <td>
+                    @Html.ActionLink("✏️", "Edit", new { id = checklist.id }, new { @class = "btn btn-warning btn-sm" })
+                    <button class="btn btn-danger btn-sm" onclick="excluirMeta(@checklist.id)">🗑️</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+    <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap4.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap4.min.css" />
+
+    <script>
+        $(document).ready(function () {
+            $('#tabelaChecklist').DataTable({
+                language: {
+                    search: "Procurar:",
+                    lengthMenu: "Mostrar _MENU_ registros por página",
+                    zeroRecords: "Nenhum registro encontrado",
+                    info: "Mostrando página _PAGE_ de _PAGES_",
+                    infoEmpty: "Nenhum registro disponível",
+                    infoFiltered: "(filtrado de _MAX_ registros no total)",
+                    paginate: {
+                        first: "Primeiro",
+                        last: "Último",
+                        next: "►",
+                        previous: "◄"
+                    }
+                }
+            });
+        });
+
+        function excluirMeta(id) {
+            if (confirm('Deseja realmente excluir esta meta?')) {
+                $.post('@Url.Action("DeleteAjax")', { id: id }, function (data) {
+                    if (data.sucesso) {
+                        location.reload();
+                    } else {
+                        alert("Erro ao excluir meta.");
+                    }
+                });
+            }
+        }
+    </script>
+}
